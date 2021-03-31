@@ -1,0 +1,25 @@
+openapi: '3.0.2'
+info:
+  title: API Title
+  version: 1.0.0
+  description: 오픈api 테스트
+servers:
+  - url: https://tnuubhsp5e.execute-api.ap-northeast-2.amazonaws.com/dev
+    description: Development API Test server
+
+components:
+  schemas:
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK
