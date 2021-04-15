@@ -9,19 +9,41 @@ servers:
 
 components:
   schemas:
-    class:
+    part:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+    chapter:
+      required:
+        - id
+        - title
+        - number
       type: object
       properties:
-        teacherName:
-          type: string
-        teacherImage:
-          type: string
-        classId:
+        id:
           type: integer
-        subjectTitle:
+        title:
           type: string
-        currentLevel:
+        number:
           type: integer
+        studentStatistic:
+          type: integer
+    course:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
     GeneralError:
       type: object
       properties:
@@ -29,18 +51,45 @@ components:
           type: integer
         message:
           type: string
-  
 paths:
-  /class:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
+  /chapters/{chapterId}:
+    parameters:
+      - name: chapterId
+        required: true
+        in: path
+        schema:
+          type: integer
+    get:
+      description: Get a detailed Information of a Chapter
+      responses:
+        '200':
+          description: OK
+  /parts/{partId}:
+    parameters:
+      - name: partId
+        required: true
+        in: path
+        schema:
+          type: integer
+      - name: student_id
+        required: true
+        in: query
+        schema:
+          type: integer
+    get:
+      description: Get Information of a Student in a Part
+      responses:
+        '200':
+          description: OK
+  /parts:
+    parameters:
+      - name: chapter_id
+        in: query
+        required: true
+        schema:
+          type: integer
+    get:
+      description: Get a List of Parts in a chapter
       responses:
         '200':
           description: OK
@@ -49,4 +98,40 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/class'
+                  $ref: '#/components/schemas/part'
+  /chapters:
+    parameters:
+      - name: course_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: student_id
+        in: query
+        schema:
+          type: string
+    get:
+      description: Get a List of Chapters in a Course
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/chapter'
+  /courses:
+    get:
+      description: Get a List of Courses
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/course'
+
+  
